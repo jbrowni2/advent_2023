@@ -77,12 +77,21 @@ func (l *List) InsertIdx(col int, d string){
     if p.next != nil {
         lis.next = p.next
         p.next = lis
+        l.Length = l.Length + 1
+
+        for i:=0; i<1000000-2;i++{
+            p = p.next
+            lis2 := &Node{info: d, next: nil}
+            lis2.next = p.next
+            p.next = lis2
+            l.Length = l.Length + 1
+        }
     } else {
         p.next = lis
         l.tail = lis
+        l.Length = l.Length + 1
     }
     
-    l.Length = l.Length + 1
     
 }
 
@@ -125,7 +134,6 @@ func (l *Mat) Insert(d *List){
 
         if lis.info.CheckStar(){
             for i:=0;i<1000000-1; i++{
-                fmt.Println(i)
                 p = p.next
                 d2 := lis.info.Clone()
                 lis2 := &ListNode{info: &d2, next: nil}
@@ -170,31 +178,56 @@ func (l *Mat) InsertIdx(row int, col int, d string){
     lis.info.InsertIdx(col, d)
 }
 
+func (l *Mat) InsertCol(col int, d string){
+    lis := l.head
+    i:=0
+    for lis != nil{
+        if i%1000 == 0{
+            fmt.Println(i)
+        }
+        lis.info.InsertIdx(col, d)
+        lis = lis.next
+        i += 1
+    }
+}
+
 func (l *Mat) CheckStarCol(){
     var cols []int
+    var stars []int
+    lis := l.head
+    for row:=0; row<l.Length; row++{
+        p := lis.info.head
+        for col:=0; col<lis.info.Length; col++{
+            if  p.info == "#"{
+                stars = append(stars, col)
+            }
+            p = p.next
+        }
+
+        lis = lis.next
+
+    }
+
     for col:=0; col<l.head.info.Length; col++{
-        stars := true
-        for row:=0; row<l.Length; row++{
-            if l.GetIdx(row, col) == "#"{
-                stars = false
+        checking := true
+        for _, s := range stars{
+            if col == s{
+                checking = false
             }
         }
 
-        if stars == true{
+        if checking == true{
             cols = append(cols, col)
         }
     }
 
     i := 0
     for _, c := range cols{
-    for j:=0; j<1000000-1; j++{
+        fmt.Println(c)
         col := c + i
-        for row:=0; row<l.Length; row++{
-            l.InsertIdx(row, col, ".")
+        l.InsertCol(col, ".")
+        i += 1000000-1
         }
-        i += 1
-        }
-    }
 }
 
 

@@ -31,8 +31,8 @@ func main(){
         data.Insert(&lis)
     }
 
-
     data.CheckStarCol()
+
 
     gals_rows, gals_cols := data.GetGals()
 
